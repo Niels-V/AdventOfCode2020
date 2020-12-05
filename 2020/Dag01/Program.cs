@@ -53,5 +53,14 @@ namespace _02
             var foundTriplet = triplets.First(checkTriplet);
             Console.WriteLine("({0},{1},{2}) = {3}", foundTriplet.Item1, foundTriplet.Item2, foundTriplet.Item3, foundTriplet.Item1 * foundTriplet.Item2 * foundTriplet.Item3);
         }
+
+        static void MainStep1(string[] args)
+        {
+            var ints = readInts("input.txt");
+            var pairs = Pairs(ints);
+            Func<Tuple<int,int>,bool> checkPairs = (x) => (x.Item1 + x.Item2 == 2020);
+            var foundPair = pairs.First(checkPairs);
+            Console.WriteLine("({0},{1}) = {2}", foundPair.Item1, foundPair.Item2, foundPair.Item1 * foundPair.Item2);
+        }
     }
 }
