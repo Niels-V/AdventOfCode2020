@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dag4", "2020\Dag04\Dag4.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dag5", "2020\Dag05\Dag5.csproj", "{2746E72C-AAAA-4416-88E1-F7642C96B396}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dag6", "2020\Dag6\Dag6.csproj", "{EDC28179-5BFA-4C33-AEE3-ADBF7D49C54E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dag6", "2020\Dag06\Dag6.csproj", "{EDC28179-5BFA-4C33-AEE3-ADBF7D49C54E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
