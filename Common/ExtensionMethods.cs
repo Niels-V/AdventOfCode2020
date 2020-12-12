@@ -7,6 +7,11 @@ namespace Common
 {
     public static class ExtensionMethods
     {
+        public static double ToRadians(this int angle)
+        {
+            return (Math.PI / 180) * angle;
+        }
+
         public static TEnum ParseEnumValue<TEnum>(this string value, TEnum? fallback = null)
                 where TEnum : struct, IComparable, IFormattable
         {
