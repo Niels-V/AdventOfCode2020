@@ -27,7 +27,7 @@ namespace Dag09
 
         public static IEnumerable<long> FindSubList(IEnumerable<long> list, int index, int preambleLength)
         {
-            if (index < preambleLength) return Enumerable.Empty<long>();
+            if (index < preambleLength) return System.Linq.Enumerable.Empty<long>();
             return list.Skip(index - preambleLength).Take(preambleLength);
         }
 
@@ -58,7 +58,7 @@ namespace Dag09
                     }
                 }
             }
-            return Enumerable.Empty<long>();
+            return System.Linq.Enumerable.Empty<long>();
         }
 
         public static long SumMinMax(IEnumerable<long> list)
@@ -73,7 +73,7 @@ namespace Dag09
                 if (!list.Any())
                 {
                     //return empty Tuple
-                    return Enumerable.Empty<Tuple<long, long>>();
+                    return System.Linq.Enumerable.Empty<Tuple<long, long>>();
                 }
                 var head = list.First(); // A
                 var tail = list.Skip(1); // [B,C,D,E]
