@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Dag19
@@ -20,12 +21,19 @@ namespace Dag19
         public MessageRules RulesCollection { get; protected set; }
         public int Id { get; set; }
         public abstract RuleResult IsValid(string message, int index);
+
+        public abstract Tuple<int,int> FindWordLength();
     }
     public class CharacterRule : MessageRule
     {
         public CharacterRule(MessageRules rulesCollection) : base(rulesCollection) { }
 
         public char Character { get; set; }
+
+        public override Tuple<int, int> FindWordLength()
+        {
+            return new Tuple<int,int>(1,1);
+        }
 
         public override RuleResult IsValid(string message, int index)
         {
@@ -42,6 +50,14 @@ namespace Dag19
         {
         }
         public int[] Ids { get; set; }
+
+        public override Tuple<int, int> FindWordLength()
+        {
+            var wordLengths = Ids.Select(r=>RulesCollection[r].FindWordLength());
+            var minValuesSum = wordLengths.Sum(w => w.Item1);
+            var maxValuesSum = wordLengths.Sum(w => w.Item2);
+            return new Tuple<int,int>(minValuesSum, maxValuesSum);
+        }
 
         public override RuleResult IsValid(string message, int index)
         {
@@ -65,6 +81,17 @@ namespace Dag19
         public int[] LeftIds { get; set; }
 
         public int[] RightIds { get; set; }
+
+        public override Tuple<int, int> FindWordLength()
+        {
+            var wordLengthsLeft = LeftIds.Select(r => RulesCollection[r].FindWordLength());
+            var wordLengthsRight = LeftIds.Select(r => RulesCollection[r].FindWordLength());
+            var minValuesSum = wordLengthsLeft.Sum(w => w.Item1);
+            var minR = wordLengthsRight.Sum(w => w.Item1);
+            var maxValuesSum = wordLengthsRight.Sum(w => w.Item2);
+            var maxR = wordLengthsRight.Sum(w => w.Item2);
+            return new Tuple<int, int>(minValuesSum<minR ? minValuesSum:minR, maxValuesSum >maxR ? maxValuesSum:maxR);
+        }
 
         public override RuleResult IsValid(string message, int index)
         {
@@ -148,7 +175,7 @@ namespace Dag19
             var rulesValid = Rules[0].IsValid(message, 0);
             var allCharactersVisited = rulesValid.NextIndex == message.Length;
             var isValid = rulesValid.IsValid && allCharactersVisited;
-             (!isValid && DecissionPonts.Count > 0)
+             if(!isValid && DecissionPonts.Count > 0)
             {   
                 rulesValid = Rules[0].IsValid(message, 0);
                 allCharactersVisited = rulesValid.NextIndex == message.Length;
