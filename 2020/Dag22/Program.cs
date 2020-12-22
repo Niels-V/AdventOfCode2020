@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 
-namespace Dag0
+namespace Dag22
 {
+
+
     [TestClass]
     public class Program
     {
@@ -19,20 +21,29 @@ namespace Dag0
 
         }
 
-        static int First(string inputFile)
+        static long First(string inputFile)
         {
-            return -1;
+            var parser = new IntDeckParser();
+            var decks = parser.ReadDecks(inputFile);
+            var game = new CombatGame(decks[0], decks[1]);
+            var result = game.PlayGame();
+            return result;
         }
 
-        static int Second(string inputFile)
+        static long Second(string inputFile)
         {
-            return -2;
+            var parser = new IntDeckParser();
+            var decks = parser.ReadDecks(inputFile);
+            var game = new RecursiveCombatGame(decks[0], decks[1],1);
+            var winner = game.PlayGame();
+            var result = game.CalculateScore(winner);
+            return result;
         }
 
 
         [DataTestMethod]
-        [DataRow("test.txt", 0)]
-        public void TestPart1(string inputFile, int expectedResult)
+        [DataRow("test.txt", 306)]
+        public void TestPart1(string inputFile, long expectedResult)
         {
             var result = First(inputFile);
             Assert.AreEqual(expectedResult, result);
@@ -40,11 +51,23 @@ namespace Dag0
 
 
         [DataTestMethod]
-        [DataRow("test.txt", 0)]
+        [DataRow("test.txt", 291)]
         public void TestPart2(string inputFile, int expectedResult)
         {
             var result = Second(inputFile);
             Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
+        public void CheckHashsetIntArray()
+        {
+            var hashset = new HashSet<string>();
+            hashset.Add(string.Join("-",new[] { 1, 2, 3 }));
+            hashset.Add(string.Join("-", new[] { 4, 5, 6 }));
+            hashset.Add(string.Join("-", new[] { 4, 5}));
+            hashset.Add(string.Join("-", new[] { 4, 5, 7 }));
+            var result = hashset.Contains(string.Join("-", new[] { 4, 5 }));
+            Assert.IsTrue(result);
         }
     }
 }
