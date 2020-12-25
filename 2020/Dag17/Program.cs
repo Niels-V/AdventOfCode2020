@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 
-namespace Dag0
+namespace Dag17
 {
     [TestClass]
     public class Program
@@ -21,7 +21,18 @@ namespace Dag0
 
         static int First(string inputFile)
         {
-            return -1;
+            var steps = 6;
+            var cubeMap = CubeMapParser.Instance.ReadMap(inputFile);
+
+            SeatState simNextState;
+            do
+            {
+                simNextState = new SeatState(currentState);
+                var nextState = simNextState.CalculateNewState();
+                currentState = nextState;
+                Console.WriteLine("Calculated new seatstate");
+            } while (simNextState.NextStateChanged);
+            return simNextState;
         }
 
         static int Second(string inputFile)

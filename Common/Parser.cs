@@ -30,4 +30,12 @@ namespace Common
             return Convert.ToInt64(line);
         }
     }
+
+    public class LineParser : Parser<string>
+    {
+        protected override string ParseLine(string line)
+        {
+            return line;
+        }
+    }
 }
