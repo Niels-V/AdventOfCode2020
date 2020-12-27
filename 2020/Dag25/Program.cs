@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 
-namespace Dag17
+namespace Dag25
 {
     [TestClass]
     public class Program
     {
         static void Main(string[] args)
         {
-            var result = First("input.txt");
+            var result = First(2084668, 3704642);
             Console.WriteLine("Program succes, found result: {0}", result);
 
             var result2 = Second("input.txt");
@@ -19,21 +19,13 @@ namespace Dag17
 
         }
 
-        static int First(string inputFile)
+        static long First(long cardPublicKey, long doorPublicKey)
         {
-            var steps = 6;
-            var cubeMap = CubeMapParser.Instance.ReadMap(inputFile);
-
-            //CubeState simNextState;
-            //do
-            //{
-            //    simNextState = new CubeStatus(currentState);
-            //    var nextState = simNextState.CalculateNewState();
-            //    currentState = nextState;
-            //    Console.WriteLine("Calculated new seatstate");
-            //} while (simNextState.NextStateChanged);
-            //return simNextState;
-            return 6; 
+            var lockSystem = new LockSystem() { CardPublicKey = cardPublicKey, DoorPublicKey = doorPublicKey };
+            lockSystem.ReverseCardLoopSize();
+            lockSystem.ReverseDoorLoopSize();
+            lockSystem.ReverseEncryptionKey();
+            return lockSystem.EncryptionKey;
         }
 
         static int Second(string inputFile)
@@ -41,12 +33,11 @@ namespace Dag17
             return -2;
         }
 
-
         [DataTestMethod]
-        [DataRow("test.txt", 0)]
-        public void TestPart1(string inputFile, int expectedResult)
+        [DataRow(5764801, 17807724, 14897079)]
+        public void TestPart1(long cardPublicKey, long doorPublicKey, long expectedResult)
         {
-            var result = First(inputFile);
+            var result = First(cardPublicKey, doorPublicKey);
             Assert.AreEqual(expectedResult, result);
         }
 
