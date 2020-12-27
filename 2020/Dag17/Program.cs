@@ -23,27 +23,66 @@ namespace Dag17
         {
             var steps = 6;
             var cubeMap = CubeMapParser.Instance.ReadMap(inputFile);
+            var activePositions = FindActivePositions(cubeMap);
+            var game = new CubeGameOfLife();
+            game.FillStart(activePositions);
+            for (int i = 1; i <= steps; i++)
+            {
+                game.DoTurn(i);
+            }
+            var activeCubes = game.Cubes.Values.Count(c=>c.IsActiveInTurn(steps));
+            return activeCubes;
+        }
 
-            //CubeState simNextState;
-            //do
-            //{
-            //    simNextState = new CubeStatus(currentState);
-            //    var nextState = simNextState.CalculateNewState();
-            //    currentState = nextState;
-            //    Console.WriteLine("Calculated new seatstate");
-            //} while (simNextState.NextStateChanged);
-            //return simNextState;
-            return 6; 
+        private static IEnumerable<Position> FindActivePositions(CubeStatus[,] cubeMap)
+        {
+            var n = cubeMap.GetLength(0);
+            var m = cubeMap.GetLength(1);
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    if (cubeMap[i, j] == CubeStatus.Active)
+                    {
+                        yield return new Position(i, j, 0);
+                    }
+                }
+            }
+        }
+        private static IEnumerable<HyperPosition> FindActiveHyperPositions(CubeStatus[,] cubeMap)
+        {
+            var n = cubeMap.GetLength(0);
+            var m = cubeMap.GetLength(1);
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    if (cubeMap[i, j] == CubeStatus.Active)
+                    {
+                        yield return new HyperPosition(i, j, 0, 0);
+                    }
+                }
+            }
         }
 
         static int Second(string inputFile)
         {
-            return -2;
+            var steps = 6;
+            var cubeMap = CubeMapParser.Instance.ReadMap(inputFile);
+            var activePositions = FindActiveHyperPositions(cubeMap);
+            var game = new HyperCubeGameOfLife();
+            game.FillStart(activePositions);
+            for (int i = 1; i <= steps; i++)
+            {
+                game.DoTurn(i);
+            }
+            var activeCubes = game.Cubes.Values.Count(c => c.IsActiveInTurn(steps));
+            return activeCubes;
         }
 
 
         [DataTestMethod]
-        [DataRow("test.txt", 0)]
+        [DataRow("test.txt", 112)]
         public void TestPart1(string inputFile, int expectedResult)
         {
             var result = First(inputFile);
@@ -52,7 +91,7 @@ namespace Dag17
 
 
         [DataTestMethod]
-        [DataRow("test.txt", 0)]
+        [DataRow("test.txt", 848)]
         public void TestPart2(string inputFile, int expectedResult)
         {
             var result = Second(inputFile);
