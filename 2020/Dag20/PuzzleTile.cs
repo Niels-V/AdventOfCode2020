@@ -82,7 +82,7 @@ namespace Dag20
             }
         }
 
-        internal TileElement TilePoint(int n, int m)
+        internal TileElement TilePoint(int m, int n)
         {
             bool flipped = ((int)Orientation) > 3;
             n = flipped ? n : (tileSize-1 - n) ;
@@ -91,25 +91,29 @@ namespace Dag20
             {
                 default:
                 case TileOrientation.Rotate270:
+                    n = tileSize - n - 1;
+                    m = tileSize - m - 1;
+                    return TileData[m, n];
                 case TileOrientation.FlippedRotate270:
-                    return TileData[n, m];
+                    return TileData[m, n];
                 case TileOrientation.Original:
                 case TileOrientation.Flipped:
                     temp = n;
                     n = m;
                     m = tileSize - temp - 1;
-                    return TileData[n, m];
+                    return TileData[m, n];
                 case TileOrientation.Rotate90:
+                    return TileData[m, n];
                 case TileOrientation.FlippedRotate90:
                     n = tileSize - n - 1;
                     m = tileSize - m - 1;
-                    return TileData[n, m];
+                    return TileData[m, n];
                 case TileOrientation.Rotate180:
                 case TileOrientation.FlippedRotate180:
                     temp = n;
                     n = tileSize - m - 1;
                     m = temp;
-                    return TileData[n, m];
+                    return TileData[m, n];
             }
         }
 

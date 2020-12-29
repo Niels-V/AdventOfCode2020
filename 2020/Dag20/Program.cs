@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Dag20
 {
@@ -69,21 +69,78 @@ namespace Dag20
             //}
             //Console.WriteLine();
 
+            for (int j = 0; j < 12; j++)
+            {
+                PuzzleTile lastTile = puzzleData[j, 0];
+                for (int i = 1; i < 12; i++)
+                {
+                    var nextTile = puzzleData[j, i];
+                    Debug.Assert(nextTile.Left == lastTile.Right);
+                    lastTile = nextTile;
+                }
+            }
+            for (int i = 0; i < 12; i++)
+            {
+                PuzzleTile lastTile = puzzleData[0, i];
+                for (int j = 1; j < 12; j++)
+                {
+                    var nextTile = puzzleData[j, i];
+                    Debug.Assert(nextTile.Top == lastTile.Bottom);
+                    lastTile = nextTile;
+                }
+            }
+
+            //using (System.IO.StreamWriter file =
+            //new System.IO.StreamWriter(@"..\..\..\tile.txt"))
+            //{
+            //    for (int j = 0; j < gridSize; j++)
+            //    {
+            //        for (int i = 0; i < gridSize; i++)
+            //        {
+            //            file.Write(puzzleData[j, i].TileId + " ");
+            //        }
+            //        file.WriteLine();
+            //    }
+            //    file.Close();
+            //}
+
+            //using (System.IO.StreamWriter file =
+            //new System.IO.StreamWriter(@"..\..\..\orientation.txt"))
+            //{
+            //    for (int j = 0; j < gridSize; j++)
+            //    {
+            //        for (int i = 0; i < gridSize; i++)
+            //        {
+            //            file.Write(puzzleData[j, i].Orientation + " ");
+            //        }
+            //        file.WriteLine();
+            //    }
+            //    file.Close();
+            //}
+
             TileElement[,] combinedImage = CreateImage(gridSize, puzzleData);
 
-            //for (int i = 0; i < gridSize*8; i++)
+            //using (System.IO.StreamWriter file =
+            //new System.IO.StreamWriter(@"..\..\..\output.txt"))
             //{
-            //    for (int j = 0; j < gridSize*8; j++)
+            //    for (int j = 0; j< gridSize * 8; j++)
             //    {
-            //        Console.Write(combinedImage[i, j]==TileElement.Hash ? '#':'.');
+            //        for (int i = gridSize*8-1; i>=0; i--)
+            //        {
+            //            file.Write(combinedImage[i, j] == TileElement.Hash ? '#' : '.');
+            //            Console.Write(combinedImage[i, j] == TileElement.Hash ? '#' : '.');
+            //        }
+            //        Console.WriteLine();
+            //        file.WriteLine();
             //    }
             //    Console.WriteLine();
+            //    file.WriteLine();
+            //    file.Close();
             //}
-            //Console.WriteLine();
 
-            var monsterHashCount = FindMonsters(combinedImage)*15;
+            var monsterHashCount = FindMonsters(combinedImage) * 15;
             var hashCount = FindHash(combinedImage);
-            return hashCount- monsterHashCount;
+            return hashCount - monsterHashCount;
         }
 
         private static int FindHash(TileElement[,] combinedImage)
@@ -126,22 +183,22 @@ namespace Dag20
                 }
             }
             int monsterCount1 = 0, monsterCount2 = 0, monsterCount3 = 0, monsterCount4 = 0, monsterCount5 = 0, monsterCount6 = 0, monsterCount7 = 0, monsterCount8 = 0;
-            for (int i = 0; i < combinedImage.GetLength(0) - 2; i++)
+            for (int i = 0; i < combinedImage.GetLength(0) - 19; i++)
             {
-                for (int j = 0; j < combinedImage.GetLength(0) - 19; j++)
+                for (int j = 0; j < combinedImage.GetLength(0) - 2; j++)
                 {
                     var monster1 = 0;
                     var monster3 = 0;
                     var monster5 = 0;
                     var monster7 = 0;
-                    for (int n = 0; n < 3; n++)
+                    for (int n = 0; n < 20; n++)
                     {
-                        for (int m = 0; m < 20; m++)
+                        for (int m = 0; m < 3; m++)
                         {
-                            if (monsterFilter1[n, m] && combinedImage[i + n, j + m] == TileElement.Hash) monster1++;
-                            if (monsterFilter3[n, m] && combinedImage[i + n, j + m] == TileElement.Hash) monster3++;
-                            if (monsterFilter5[n, m] && combinedImage[i + n, j + m] == TileElement.Hash) monster5++;
-                            if (monsterFilter7[n, m] && combinedImage[i + n, j + m] == TileElement.Hash) monster7++;
+                            if (monsterFilter1[m, n] && combinedImage[j + m, i + n] == TileElement.Hash) monster1++;
+                            if (monsterFilter3[m, n] && combinedImage[j + m, i + n] == TileElement.Hash) monster3++;
+                            if (monsterFilter5[m, n] && combinedImage[j + m, i + n] == TileElement.Hash) monster5++;
+                            if (monsterFilter7[m, n] && combinedImage[j + m, i + n] == TileElement.Hash) monster7++;
                         }
                     }
                     if (monster1 == 15) { monsterCount1++; }
@@ -150,22 +207,22 @@ namespace Dag20
                     if (monster7 == 15) { monsterCount7++; }
                 }
             }
-            for (int i = 0; i < combinedImage.GetLength(0) - 19; i++)
+            for (int i = 0; i < combinedImage.GetLength(0) - 2; i++) // [0..93]
             {
-                for (int j = 0; j < combinedImage.GetLength(0) - 2; j++)
+                for (int j = 0; j < combinedImage.GetLength(0) - 19; j++) // [0..76]
                 {
                     var monster2 = 0;
                     var monster4 = 0;
                     var monster6 = 0;
                     var monster8 = 0;
-                    for (int n = 0; n < 20; n++)
+                    for (int n = 0; n < 3; n++) //[0..2]
                     {
-                        for (int m = 0; m < 3; m++)
+                        for (int m = 0; m < 20; m++) //[0..19]
                         {
-                            if (monsterFilter2[n, m] && combinedImage[i + n, j + m] == TileElement.Hash) monster2++;
-                            if (monsterFilter4[n, m] && combinedImage[i + n, j + m] == TileElement.Hash) monster4++;
-                            if (monsterFilter6[n, m] && combinedImage[i + n, j + m] == TileElement.Hash) monster6++;
-                            if (monsterFilter8[n, m] && combinedImage[i + n, j + m] == TileElement.Hash) monster8++;
+                            if (monsterFilter2[m, n] && combinedImage[j + m, i + n] == TileElement.Hash) monster2++; //[0..95,0..95]
+                            if (monsterFilter4[m, n] && combinedImage[j + m, i + n] == TileElement.Hash) monster4++;
+                            if (monsterFilter6[m, n] && combinedImage[j + m, i + n] == TileElement.Hash) monster6++;
+                            if (monsterFilter8[m, n] && combinedImage[j + m, i + n] == TileElement.Hash) monster8++;
                         }
                     }
                     if (monster2 == 15) { monsterCount2++; }
@@ -310,14 +367,14 @@ namespace Dag20
                 {
                     FillTile(puzzled, nonBorderTiles, i, s); //[1,1][2,1][3,1][4,1][5,1][6,1][7,1][8,1][9,1][10,1] / [2,2][3,2]..[9,2] / [3,3][4,3]..[8,3] / [4,4]..[7,4] / [5,5][6,5]  //10+8+6+4+2
                 }
-                for (int i = s+1; i < gridSize - s; i++) //[2..10] [3..9] [4..8] [5..7] [6]
+                for (int i = s + 1; i < gridSize - s; i++) //[2..10] [3..9] [4..8] [5..7] [6]
                 {
                     FillTile(puzzled, nonBorderTiles, gridSize - s - 1, i);//[10,2][10,3][10,4][10,5][10,6][10,7][10,8][10,9][10,10] / [9,3][9,4]..[9,8][9,9] / [8,4]..[8,8] / [7,5]..[7,7] / [6,6] //9+7+5+3+1
-                } 
+                }
                 for (int i = gridSize - s - 2; i > s; i--) //[9..2] [8..3][7..4][6..5]
                 {
                     FillTile(puzzled, nonBorderTiles, i, gridSize - s - 1); //[9,10][8,10][7,10][6,10][5,10][4,10][3,10][2,10] / [8,9][7,9]..[3,9] / [7,8]..[4,8] / [6,7][5,7] //8+6+4+2
-            }
+                }
                 for (int i = gridSize - s - 1; i > s; i--) //[10..2][9..3][8..4][7..5][6]
                 {
                     FillTile(puzzled, nonBorderTiles, s, i); //[1,10][1,9][1,8][1,7][1,6][1,5][1,4][1,3][1,2] / [2,9][2,8]..[2,3] / [3,8][3,7]..[3,4] / [4,7][4,6][4,5] / [5,6] //9+7+5+3+1
@@ -329,10 +386,10 @@ namespace Dag20
 
         private static void FillTile(PuzzleTile[,] puzzled, List<PuzzleTile> nonBorderTiles, int posx, int posy)
         {
-            short? needTop = posy > 0 && puzzled[posy - 1, posx] != null ? puzzled[ posy - 1, posx].Bottom : new short?();
+            short? needTop = posy > 0 && puzzled[posy - 1, posx] != null ? puzzled[posy - 1, posx].Bottom : new short?();
             short? needLeft = posx > 0 && puzzled[posy, posx - 1] != null ? puzzled[posy, posx - 1].Right : new short?();
             short? needBottom = posy < puzzled.GetLength(1) - 1 && puzzled[posy + 1, posx] != null ? puzzled[posy + 1, posx].Top : new short?();
-            short? needRight= posx < puzzled.GetLength(0) - 1 && puzzled[posy, posx + 1] != null ? puzzled[posy, posx + 1].Left : new short?();
+            short? needRight = posx < puzzled.GetLength(0) - 1 && puzzled[posy, posx + 1] != null ? puzzled[posy, posx + 1].Left : new short?();
 
             PuzzleTile foundTile = null;
             foreach (var tile in nonBorderTiles)
@@ -439,7 +496,7 @@ namespace Dag20
                 var shouldRotateSteps = (neededBorderPosition - foundBorderPosition + 4) % 4;
                 var orientation = (TileOrientation)shouldRotateSteps;
 
-                var flipOrientation = (neededBorderPosition==0||neededBorderPosition==2) ?
+                var flipOrientation = (neededBorderPosition == 0 || neededBorderPosition == 2) ?
                     orientation == TileOrientation.Rotate90 ? TileOrientation.Rotate270 : orientation == TileOrientation.Rotate270 ? TileOrientation.Rotate90 : orientation :
                     orientation == TileOrientation.Original ? TileOrientation.Rotate180 : orientation == TileOrientation.Rotate180 ? TileOrientation.Original : orientation; //because of flip, the rotation is counter direction, but only on top and bottom?
 
