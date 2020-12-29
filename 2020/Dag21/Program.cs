@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 
-namespace Dag0
+namespace Dag21
 {
     [TestClass]
     public class Program
@@ -21,17 +21,66 @@ namespace Dag0
 
         static int First(string inputFile)
         {
-            return -1;
+            var parser = new FoodParser();
+            var list = parser.ParseFile(inputFile);
+
+            while (list.Allergens.Count(all => all.Value.Ingredient == null) > 0)
+            {
+                foreach (var allergen in list.Allergens.Where(all => all.Value.Ingredient == null))
+                {
+                    var foodWithAllergen = list.Foods.Where(f => f.GivenAllergens.Contains(allergen.Value));
+                    var ingredientsWithPossibleAllergen = foodWithAllergen.SelectMany(f => f.Ingredients).Distinct();
+
+                    var ingredientsInAllFoodsWithAllergen = ingredientsWithPossibleAllergen.Where(i => foodWithAllergen.All(f => f.Ingredients.Contains(i)));
+
+                    if (ingredientsInAllFoodsWithAllergen.Count() == 1)
+                    {
+                        ingredientsInAllFoodsWithAllergen.Single().Allergen = allergen.Value;
+                        allergen.Value.Ingredient = ingredientsInAllFoodsWithAllergen.Single();
+                    }
+                }
+                //Calculate new food list without known ingredients and allergens
+                list.CleanFoodList();
+
+                //do allergen match again
+            }
+            var foodIngredientsWithoutAllergen = list.Foods.Sum(f => f.Ingredients.Count());
+            return foodIngredientsWithoutAllergen;
         }
 
-        static int Second(string inputFile)
+        static string Second(string inputFile)
         {
-            return -2;
+            var parser = new FoodParser();
+            var list = parser.ParseFile(inputFile);
+
+            while (list.Allergens.Count(all => all.Value.Ingredient == null) > 0)
+            {
+                foreach (var allergen in list.Allergens.Where(all => all.Value.Ingredient == null))
+                {
+                    var foodWithAllergen = list.Foods.Where(f => f.GivenAllergens.Contains(allergen.Value));
+                    var ingredientsWithPossibleAllergen = foodWithAllergen.SelectMany(f => f.Ingredients).Distinct();
+
+                    var ingredientsInAllFoodsWithAllergen = ingredientsWithPossibleAllergen.Where(i => foodWithAllergen.All(f => f.Ingredients.Contains(i)));
+
+                    if (ingredientsInAllFoodsWithAllergen.Count() == 1)
+                    {
+                        ingredientsInAllFoodsWithAllergen.Single().Allergen = allergen.Value;
+                        allergen.Value.Ingredient = ingredientsInAllFoodsWithAllergen.Single();
+                    }
+                }
+                //Calculate new food list without known ingredients and allergens
+                list.CleanFoodList();
+
+                //do allergen match again
+            }
+            
+            var ingredientList = string.Join(",",list.Ingredients.Where(ing => ing.Value.Allergen != null).OrderBy(ing => ing.Value.Allergen.Name).Select(ing => ing.Key));
+            return ingredientList;
         }
 
 
         [DataTestMethod]
-        [DataRow("test.txt", 0)]
+        [DataRow("test.txt", 5)]
         public void TestPart1(string inputFile, int expectedResult)
         {
             var result = First(inputFile);
@@ -40,8 +89,8 @@ namespace Dag0
 
 
         [DataTestMethod]
-        [DataRow("test.txt", 0)]
-        public void TestPart2(string inputFile, int expectedResult)
+        [DataRow("test.txt", "mxmxvkd,sqjhc,fvjkl")]
+        public void TestPart2(string inputFile, string expectedResult)
         {
             var result = Second(inputFile);
             Assert.AreEqual(expectedResult, result);
