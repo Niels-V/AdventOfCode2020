@@ -250,48 +250,52 @@ namespace Dag20
                 tile.CalculateBorderData(false);
             }
             PuzzleTile nextTile = null;
-            //find gridsize -2 borders with the correct numbers
+            //Top borders with the correct numbers
             for (int i = 1; i < n; i++)
             {
                 nextTile = FindBorderTile(borderTiles, lastTile.Right, 0);
                 puzzled[0, i] = nextTile;
                 lastTile = nextTile;
+                borderTiles.Remove(borderTiles.First(b => b.Item1.TileId == nextTile.TileId));
             }
             //find next corner
             nextTile = FindCornerTile(cornerTiles.Skip(1).Take(3), 1, lastTile.Right);
             puzzled[0, n] = nextTile;
             lastTile = nextTile;
 
-            //find gridsize -2 borders with the correct numbers
+            //find Right borders with the correct numbers
             for (int i = 1; i < n; i++)
             {
                 nextTile = FindBorderTile(borderTiles, lastTile.Bottom, 1);
                 puzzled[i, n] = nextTile;
                 lastTile = nextTile;
+                borderTiles.Remove(borderTiles.First(b => b.Item1.TileId == nextTile.TileId));
             }
 
             //find next corner
             nextTile = FindCornerTile(cornerTiles.Skip(1).Take(3), 2, lastTile.Bottom);
             puzzled[n, n] = nextTile;
             lastTile = nextTile;
-            //find gridsize -2 borders with the correct numbers
+            //find Bottom borders with the correct numbers
             for (int i = n - 1; i >= 1; i--)
             {
                 nextTile = FindBorderTile(borderTiles, lastTile.Left, 2);
                 puzzled[n, i] = nextTile;
                 lastTile = nextTile;
+                borderTiles.Remove(borderTiles.First(b => b.Item1.TileId == nextTile.TileId));
             }
 
             //find next corner
             nextTile = FindCornerTile(cornerTiles.Skip(1).Take(3), 3, lastTile.Left);
             puzzled[n, 0] = nextTile;
             lastTile = nextTile;
-            //find gridsize -2 borders with the correct numbers
+            //find Left borders with the correct numbers
             for (int i = n - 1; i >= 1; i--)
             {
                 nextTile = FindBorderTile(borderTiles, lastTile.Top, 3);
                 puzzled[i, 0] = nextTile;
                 lastTile = nextTile;
+                borderTiles.Remove(borderTiles.First(b => b.Item1.TileId == nextTile.TileId));
             }
             //check last piece for borders with the correct numbers
             if (lastTile.Top != firstCornerTile.Bottom)
@@ -325,10 +329,10 @@ namespace Dag20
 
         private static void FillTile(PuzzleTile[,] puzzled, List<PuzzleTile> nonBorderTiles, int posx, int posy)
         {
-            short? needLeft = posy > 0 && puzzled[posx, posy - 1] != null ? puzzled[posx, posy - 1].Right : new short?();
-            short? needTop = posx > 0 && puzzled[posx - 1, posy] != null ? puzzled[posx - 1, posy].Bottom : new short?();
-            short? needRight = posy < puzzled.GetLength(1) - 1 && puzzled[posx, posy + 1] != null ? puzzled[posx, posy + 1].Left : new short?();
-            short? needBottom = posx < puzzled.GetLength(0) - 1 && puzzled[posx + 1, posy] != null ? puzzled[posx + 1, posy].Top : new short?();
+            short? needTop = posy > 0 && puzzled[posy - 1, posx] != null ? puzzled[ posy - 1, posx].Bottom : new short?();
+            short? needLeft = posx > 0 && puzzled[posy, posx - 1] != null ? puzzled[posy, posx - 1].Right : new short?();
+            short? needBottom = posy < puzzled.GetLength(1) - 1 && puzzled[posy + 1, posx] != null ? puzzled[posy + 1, posx].Top : new short?();
+            short? needRight= posx < puzzled.GetLength(0) - 1 && puzzled[posy, posx + 1] != null ? puzzled[posy, posx + 1].Left : new short?();
 
             PuzzleTile foundTile = null;
             foreach (var tile in nonBorderTiles)
@@ -372,41 +376,41 @@ namespace Dag20
 
                 tile.CalculateBorderData(false);
                 var found = false;
-                if (orientation[0] && orientation[1] && tile.Left == lastPuzzle || tile.Left == inverse)
+                if (orientation[0] && orientation[1] && (tile.Left == lastPuzzle || tile.Left == inverse))
                 {
                     found = true;
                 }
-                else if (orientation[1] && orientation[2] && tile.Top == lastPuzzle || tile.Top == inverse)
+                else if (orientation[1] && orientation[2] && (tile.Top == lastPuzzle || tile.Top == inverse))
                 {
                     found = true;
                     cornerOrientationStep = 3;
                 }
-                else if (orientation[2] && orientation[3] && tile.Right == lastPuzzle || tile.Right == inverse)
+                else if (orientation[2] && orientation[3] && (tile.Right == lastPuzzle || tile.Right == inverse))
                 {
                     found = true;
                     cornerOrientationStep = 2;
                 }
-                else if (orientation[3] && orientation[0] && tile.Bottom == lastPuzzle || tile.Bottom == inverse)
+                else if (orientation[3] && orientation[0] && (tile.Bottom == lastPuzzle || tile.Bottom == inverse))
                 {
                     found = true;
                     cornerOrientationStep = 1;
                 }
-                else if (orientation[0] && orientation[1] && tile.Bottom == lastPuzzle || tile.Bottom == inverse)
+                else if (orientation[0] && orientation[1] && (tile.Bottom == lastPuzzle || tile.Bottom == inverse))
                 {
                     found = true;
                     cornerOrientationStep = 5;
                 }
-                else if (orientation[1] && orientation[2] && tile.Left == lastPuzzle || tile.Left == inverse)
+                else if (orientation[1] && orientation[2] && (tile.Left == lastPuzzle || tile.Left == inverse))
                 {
                     found = true;
                     cornerOrientationStep = 6;
                 }
-                else if (orientation[2] && orientation[3] && tile.Top == lastPuzzle || tile.Top == inverse)
+                else if (orientation[2] && orientation[3] && (tile.Top == lastPuzzle || tile.Top == inverse))
                 {
                     found = true;
                     cornerOrientationStep = 7;
                 }
-                else if (orientation[3] && orientation[0] && tile.Right == lastPuzzle || tile.Right == inverse)
+                else if (orientation[3] && orientation[0] && (tile.Right == lastPuzzle || tile.Right == inverse))
                 {
                     found = true;
                     cornerOrientationStep = 4;
@@ -435,17 +439,22 @@ namespace Dag20
                 var shouldRotateSteps = (neededBorderPosition - foundBorderPosition + 4) % 4;
                 var orientation = (TileOrientation)shouldRotateSteps;
 
+                var flipOrientation = (neededBorderPosition==0||neededBorderPosition==2) ?
+                    orientation == TileOrientation.Rotate90 ? TileOrientation.Rotate270 : orientation == TileOrientation.Rotate270 ? TileOrientation.Rotate90 : orientation :
+                    orientation == TileOrientation.Original ? TileOrientation.Rotate180 : orientation == TileOrientation.Rotate180 ? TileOrientation.Original : orientation; //because of flip, the rotation is counter direction, but only on top and bottom?
+
                 var lastPuzzleElementIndex = (neededBorderPosition + 3) % 4;
+                //var lastPuzzleElementIndexFlipped = (neededBorderPosition + 1) % 4;
                 if (puzzle.Item1.TilePositions[((int)orientation)][lastPuzzleElementIndex] == lastPuzzle ||
                     puzzle.Item1.TilePositions[((int)orientation)][lastPuzzleElementIndex] == inverse)
                 {
                     puzzle.Item1.Orientation = orientation;
                     return puzzle.Item1;
                 }
-                else if (puzzle.Item1.TilePositions[((int)orientation + 4)][lastPuzzleElementIndex] == lastPuzzle ||
-                    puzzle.Item1.TilePositions[((int)orientation + 4)][lastPuzzleElementIndex] == inverse)
+                else if (puzzle.Item1.TilePositions[((int)flipOrientation + 4)][lastPuzzleElementIndex] == lastPuzzle ||
+                    puzzle.Item1.TilePositions[((int)flipOrientation + 4)][lastPuzzleElementIndex] == inverse)
                 {
-                    puzzle.Item1.Orientation = ((TileOrientation)(int)orientation + 4);
+                    puzzle.Item1.Orientation = ((TileOrientation)(int)flipOrientation + 4);
                     return puzzle.Item1;
                 }
             }
