@@ -303,24 +303,24 @@ namespace Dag20
                 throw new InvalidOperationException("last border tile mismatch with corner");
             }
 
-            var fillSteps = (gridSize - 2) / 2 + (gridSize - 2) % 2;
-            for (int s = 1; s <= fillSteps; s++)
+            var fillSteps = (gridSize - 2) / 2 + (gridSize - 2) % 2;//5
+            for (int s = 1; s <= fillSteps; s++) //[1 ..5]
             {
-                for (int i = s; i < gridSize - s; i++)
+                for (int i = s; i < gridSize - s; i++) //[1..10] [2..9] [3..8] [4..7] [5..6]
                 {
-                    FillTile(puzzled, nonBorderTiles, i, s);
+                    FillTile(puzzled, nonBorderTiles, i, s); //[1,1][2,1][3,1][4,1][5,1][6,1][7,1][8,1][9,1][10,1] / [2,2][3,2]..[9,2] / [3,3][4,3]..[8,3] / [4,4]..[7,4] / [5,5][6,5]  //10+8+6+4+2
                 }
-                for (int i = s + 1; i < gridSize - s; i++)
+                for (int i = s+1; i < gridSize - s; i++) //[2..10] [3..9] [4..8] [5..7] [6]
                 {
-                    FillTile(puzzled, nonBorderTiles, gridSize - s - 1, i);
-                }
-                for (int i = gridSize - s - 1; i > s; i--)
+                    FillTile(puzzled, nonBorderTiles, gridSize - s - 1, i);//[10,2][10,3][10,4][10,5][10,6][10,7][10,8][10,9][10,10] / [9,3][9,4]..[9,8][9,9] / [8,4]..[8,8] / [7,5]..[7,7] / [6,6] //9+7+5+3+1
+                } 
+                for (int i = gridSize - s - 2; i > s; i--) //[9..2] [8..3][7..4][6..5]
                 {
-                    FillTile(puzzled, nonBorderTiles, i, gridSize - s - 1);
-                }
-                for (int i = gridSize - s - 1; i > s + 1; i--)
+                    FillTile(puzzled, nonBorderTiles, i, gridSize - s - 1); //[9,10][8,10][7,10][6,10][5,10][4,10][3,10][2,10] / [8,9][7,9]..[3,9] / [7,8]..[4,8] / [6,7][5,7] //8+6+4+2
+            }
+                for (int i = gridSize - s - 1; i > s; i--) //[10..2][9..3][8..4][7..5][6]
                 {
-                    FillTile(puzzled, nonBorderTiles, s, i);
+                    FillTile(puzzled, nonBorderTiles, s, i); //[1,10][1,9][1,8][1,7][1,6][1,5][1,4][1,3][1,2] / [2,9][2,8]..[2,3] / [3,8][3,7]..[3,4] / [4,7][4,6][4,5] / [5,6] //9+7+5+3+1
                 }
 
             }
@@ -347,7 +347,7 @@ namespace Dag20
                     if (match)
                     {
                         tile.Orientation = (TileOrientation)i;
-                        puzzled[posx, posy] = tile;
+                        puzzled[posy, posx] = tile;
                         foundTile = tile;
                         break;
                     }
