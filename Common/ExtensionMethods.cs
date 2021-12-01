@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -39,6 +40,15 @@ namespace Common
             {
                 return fallback.Value;
             }
+        }
+
+        public static IEnumerable<long> Differences(this IList<long> list)
+        {
+            for (int i = 0; i < list.Count - 1; i++)
+            {
+                yield return list[i + 1] - list[i];
+            }
+            yield break;
         }
     }
 }
