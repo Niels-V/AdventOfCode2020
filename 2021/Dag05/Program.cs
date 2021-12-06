@@ -106,6 +106,7 @@ namespace AoC
         NoLine
     }
 
+    [TestCategory("2021")]
     [TestClass]
     public class Program
     {

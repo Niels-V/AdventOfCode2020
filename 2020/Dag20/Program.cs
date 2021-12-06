@@ -7,6 +7,7 @@ using System.Diagnostics;
 
 namespace Dag20
 {
+    [TestCategory("2020")]
     [TestClass]
     public class Program
     {

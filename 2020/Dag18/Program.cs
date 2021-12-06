@@ -24,6 +24,7 @@ namespace Dag18
             return Convert.ToInt64(calculationResult);
         }
     }
+    [TestCategory("2020")]
     [TestClass]
     public class Program
     {

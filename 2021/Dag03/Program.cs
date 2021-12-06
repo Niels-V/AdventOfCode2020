@@ -14,6 +14,7 @@ namespace Dag03
             throw new InvalidOperationException("Unknown input");
         }
     }
+    [TestCategory("2021")]
     [TestClass]
     public class Program
     {

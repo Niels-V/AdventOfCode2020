@@ -6,6 +6,7 @@ using Common;
 
 namespace Dag01
 {
+    [TestCategory("2021")]
     [TestClass]
     public class Program
     {

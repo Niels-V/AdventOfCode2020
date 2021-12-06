@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Dag19
 {
+    [TestCategory("2020")]
     [TestClass]
     public class Parser
     {

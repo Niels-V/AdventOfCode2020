@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Dag25
 {
+    [TestCategory("2020")]
     [TestClass]
     public class LockSystem
     {

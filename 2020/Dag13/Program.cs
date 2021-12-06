@@ -11,6 +11,7 @@ namespace Dag13
         public long BusNumber { get; set; }
         public long SkipMinutes { get; set; }
     }
+    [TestCategory("2020")]
     [TestClass]
     public class Program
     {

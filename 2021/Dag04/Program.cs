@@ -173,6 +173,7 @@ namespace Dag04
         public int MarkedCount { get; set; }
     }
 
+    [TestCategory("2021")]
     [TestClass]
     public class Program
     {

@@ -7,6 +7,7 @@ using Common;
 
 namespace Dag23
 {
+    [TestCategory("2020")]
     [TestClass]
     public class Program
     {

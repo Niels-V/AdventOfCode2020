@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 
 namespace Dag19
 {
+    [TestCategory("2020")]
     [TestClass]
     public class Program
     {

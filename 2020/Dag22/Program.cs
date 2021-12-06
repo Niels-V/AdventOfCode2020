@@ -8,6 +8,7 @@ namespace Dag22
 {
 
 
+    [TestCategory("2020")]
     [TestClass]
     public class Program
     {

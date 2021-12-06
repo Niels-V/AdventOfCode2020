@@ -8,6 +8,7 @@ using System.Linq;
 namespace AoC
 {
     [TestClass]
+    [TestCategory("2021")]
     public class Program
     {
         public static readonly int FishCycleTime = 7;

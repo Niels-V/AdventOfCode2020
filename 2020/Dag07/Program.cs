@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Dag07
 {
+    [TestCategory("2020")]
     [TestClass]
     public class Program
     {

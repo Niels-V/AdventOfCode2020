@@ -37,6 +37,7 @@ namespace Dag11
         }
     }
 
+    [TestCategory("2020")]
     [TestClass]
     public class Program
     {

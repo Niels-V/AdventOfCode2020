@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Dag08
 {
+    [TestCategory("2020")]
     [TestClass]
     public class Parser
     {

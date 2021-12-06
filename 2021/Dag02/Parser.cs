@@ -7,6 +7,7 @@ using Common;
 
 namespace Dag02
 {
+    [TestCategory("2021")]
     [TestClass]
     public class Parser : Parser<Instruction>
     {

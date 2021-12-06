@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Dag21
 {
+    [TestCategory("2020")]
     [TestClass]
     public class FoodParser : LineParser
     {

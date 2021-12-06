@@ -33,6 +33,7 @@ namespace Dag02
         public int Argument { get; set; }
     }
 
+    [TestCategory("2021")]
     [TestClass]
     public class Program
     {

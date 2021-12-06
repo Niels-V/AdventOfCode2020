@@ -136,6 +136,7 @@ namespace Dag19
             return rightResult;
         }
     }
+    [TestCategory("2020")]
     [TestClass]
     public class MessageRules
     {
