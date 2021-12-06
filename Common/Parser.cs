@@ -8,34 +8,30 @@ namespace Common
     public abstract class Parser<T>
     {
         protected IEnumerable<string> Readlines(string filePath) => System.IO.File.ReadLines(filePath);
-        public virtual IEnumerable<T> ReadData(string filePath)
-        {
-            return Readlines(filePath).Select(ParseLine);
-        }
+        public virtual IEnumerable<T> ReadData(string filePath) => Readlines(filePath).Select(ParseLine);
 
         protected abstract T ParseLine(string line);
+    }
+    /// <summary>
+    /// Parses the first line as CSV integers.
+    /// </summary>
+    public class IntCsvLineParser : Parser<int>
+    {
+        public override IEnumerable<int> ReadData(string filePath) => Readlines(filePath).First().Split(',', StringSplitOptions.RemoveEmptyEntries).Select(ParseLine);
+        protected override int ParseLine(string line) => Convert.ToInt32(line);
     }
 
     public class IntParser : Parser<int>
     {
-        protected override int ParseLine(string line)
-        {
-            return Convert.ToInt32(line);
-        }
+        protected override int ParseLine(string line) => Convert.ToInt32(line);
     }
     public class LongParser : Parser<long>
     {
-        protected override long ParseLine(string line)
-        {
-            return Convert.ToInt64(line);
-        }
+        protected override long ParseLine(string line) => Convert.ToInt64(line);
     }
 
     public class LineParser : Parser<string>
     {
-        protected override string ParseLine(string line)
-        {
-            return line;
-        }
+        protected override string ParseLine(string line) => line;
     }
 }
