@@ -113,11 +113,7 @@ namespace AoC
                 if (!caveSystem.ContainsKey(cave1.Name)) { caveSystem.Add(cave1.Name, cave1); }
                 if (!caveSystem.ContainsKey(cave2.Name)) { caveSystem.Add(cave2.Name, cave2); }
             }
-            var cavesToVisit = caveSystem.Where(cave => (cave.Value.IsLarge ||
-                                                      cave.Value.LinkedCaves.Count > 1 ||
-                                                      (cave.Value.LinkedCaves.Count == 1 && cave.Value.LinkedCaves[0].IsLarge))
-                                                      && cave.Key != "start"
-                                                      ).ToDictionary(c => c.Key, c => c.Value);
+            var cavesToVisit = caveSystem.Where(cave =>  cave.Key != "start" ).ToDictionary(c => c.Key, c => c.Value);
             var startPath = System.Linq.Enumerable.Repeat(caveSystem["start"], 1);
             var foundPaths = System.Linq.Enumerable.Repeat(startPath, 1);
             var caveDictionaries = new Dictionary<string, Tuple<Dictionary<string, Cave>,bool>>
@@ -152,15 +148,22 @@ namespace AoC
                             var newCavesToUse = removeCave ? 
                                 cavesToUse.Where(c => c.Key != item.Item2.Name).ToDictionary(c => c.Key, c => c.Value) : cavesToUse;
                             
-                            caveDictionaries.Add(stringNewPath, new (newCavesToUse, usedDoubleEntry || (!item.Item2.IsLarge&&!removeCave)));
+                            caveDictionaries.Add(stringNewPath, new (newCavesToUse, usedDoubleEntry || (!item.Item2.IsLarge && removeCave)));
                         }
                     }
                 }
                 foundPaths = pathsForNextRun;
 
             }
-            var completePaths = caveDictionaries.Where(c => c.Key.EndsWith("end")).OrderBy(c=>c.Key);
-            return completePaths.LongCount();
+            var completePaths = caveDictionaries.Where(c => c.Key.EndsWith("end")).OrderBy(c=>c.Key).Select(c=>c.Key);
+            var newCalc = completePaths.Where(
+                path => {
+                var bins = path.Split(",", StringSplitOptions.RemoveEmptyEntries)
+                   .Where(cave => char.IsLower(cave[0]))
+                   .GroupBy(cave => cave).Select(g => new { Key = g, Counts = g.Count() });
+                return bins.Count(bin => bin.Counts == 2) <= 1;
+                });
+            return newCalc.LongCount();
         }
 
         [DataTestMethod]
