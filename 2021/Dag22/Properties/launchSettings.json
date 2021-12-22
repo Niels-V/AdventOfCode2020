@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Dag22": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "COMPlus_gcAllowVeryLargeObjects": "1"
+      }
+    }
+  }
+}
