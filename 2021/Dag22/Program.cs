@@ -75,6 +75,7 @@ namespace AoC
 
                 if (representation[i].instruction.InstructionOn)
                 {
+                    //of cube instruction is on, add newcube
                     cubes.Add(newCube);
                 }
             }
@@ -84,56 +85,6 @@ namespace AoC
             return sum;
         }
 
-        private static long CountSegments(List<int> xborders, List<int> yborders, List<int> zborders, List<RebootStep> rebootsteps)
-        {
-            var xsegments = xborders.Count;
-            var ysegments = yborders.Count;
-            var zsegments = zborders.Count;
-            var sum = 0L;
-            var minX = xborders[0];
-            var minY = yborders[0];
-            var minZ = zborders[0];
-            var minXY = minY;
-            var minYZ = minZ;
-            Console.WriteLine($"Counting progress of lines in x direction. Total of {xsegments}:");
-            Console.Write("Line: 0000");
-            var sw = new Stopwatch();sw.Start();
-            for (int i = 1; i < xsegments; i++)
-            {
-                Console.Write("\b\b\b\b" + string.Format("{0:D4}", i));
-
-                var maxX = xborders[i] - 1;
-
-                for (int j = 1; j < ysegments; j++)
-                {
-                    var maxY = yborders[j] - 1;
-                    for (int k = 1; k < zsegments; k++)
-                    {
-                        var maxZ = zborders[k] - 1;
-                        var blockStatus = false;
-                        foreach (var rebootstep in rebootsteps)
-                        {
-                            var instruction = rebootstep.GetInstruction(minX, minY, minZ);
-                            blockStatus = instruction.HasValue ? instruction.Value : blockStatus;
-                        }
-                        if (blockStatus)
-                        {
-                            sum += ((long)(maxX - minX + 1)) * ((long)(maxY - minY + 1)) * ((long)(maxZ - minZ + 1));
-                        }
-                        minZ = maxZ + 1;
-                    }
-                    minZ = minYZ;
-                    minY = maxY + 1;
-                }
-
-                minY = minXY;
-                minX = maxX + 1;
-            }
-            sw.Stop();
-            Console.WriteLine();
-            Console.WriteLine(sw.Elapsed.ToString());
-            return sum;
-        }
         [TestMethod]
         public void TestCubeRemove()
         {
@@ -142,10 +93,54 @@ namespace AoC
             var c1 = new AABB(10, 10, 10, 12, 12, 12);
             var c2 = new AABB(11, 11, 11, 13, 13, 13);
             var c3 = c1.Remove(c2);
-            Assert.AreEqual(19, c3.Sum(c => c.Volume));
             Assert.AreEqual(3, c3.Count());
+            Assert.AreEqual(19, c3.Sum(c => c.Volume));
         }
 
+        [TestMethod]
+        public void TestCubeRemove2()
+        {
+            var c1 = new AABB(-1, -1, -1, 1, 1, 1);
+            var c2 = new AABB(0, 0, 0, 2, 2, 2);
+            var c3 = c1.Remove(c2);
+            Assert.AreEqual(3, c3.Count());
+            Assert.AreEqual(19, c3.Sum(c => c.Volume));
+        }
+
+        [TestMethod]
+        public void TestCubeRemove3()
+        {
+            //on x = 10..12, y = 10..12, z = 10..12
+            //on x = 11..13, y = 11..13, z = 11..13
+            var c1 = new AABB(-10, -10, -10, -8, -8, -8);
+            var c2 = new AABB(9, 9, 9, 11, 11, 11);
+            var c3 = c1.Remove(c2);
+            Assert.AreEqual(1, c3.Count());
+            Assert.AreEqual(27, c3.Sum(c => c.Volume));
+        }
+
+        [TestMethod]
+        public void TestCubeRemove4()
+        {
+            //on x = 10..12, y = 10..12, z = 10..12
+            //on x = 11..13, y = 11..13, z = 11..13
+            var c1 = new AABB(10, 10, 10, 10, 10, 10);
+            var c2 = new AABB(9, 9, 9, 11, 11, 11);
+            var c3 = c1.Remove(c2);
+            Assert.AreEqual(0, c3.Count());
+            Assert.AreEqual(0, c3.Sum(c => c.Volume));
+        }
+        [TestMethod]
+        public void TestCubeRemove5()
+        {
+            //on x = 10..12, y = 10..12, z = 10..12
+            //on x = 11..13, y = 11..13, z = 11..13
+            var c1 = new AABB(10, 10, 10, 10, 10, 10);
+            var c2 = new AABB(9, 9, 9, 11, 11, 11);
+            var c3 = c2.Remove(c1);
+            Assert.AreEqual(6, c3.Count());
+            Assert.AreEqual(26, c3.Sum(c => c.Volume));
+        }
 
         [TestMethod]
         public void TestPart1()
@@ -213,21 +208,5 @@ namespace AoC
             };
             return instruction;
         }
-    }
-
-    public struct Cube
-    {
-        public Cube(int x, int y, int z//, int w
-                                       )
-        {
-            X = x;
-            Y = y;
-            Z = z;
-        }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Z { get; set; }
-
-        public override string ToString() => $"[{X},{Y},{Z}]";
     }
 }

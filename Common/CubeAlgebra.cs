@@ -60,70 +60,7 @@ namespace Common.CubeAlgebra
 
         public IEnumerable<AABB> Union(AABB other)
         {
-            if (!IntersectWith(other))
-            {
-                yield return this;
-                yield return other;
-            }
-            else if (Contains(other))
-            {
-                yield return this;
-            }
-            else if (other.Contains(this))
-            {
-                yield return other;
-            }
-            else
-            {
-                //determine which planes got crossed;
-                var crossMaxXPlane = other.Max.X > Max.X;
-                var crossMaxYPlane = other.Max.Y > Max.Y;
-                var crossMaxZPlane = other.Max.Z > Max.Z;
-                var crossMinXPlane = other.Min.X < Min.X;
-                var crossMinYPlane = other.Min.Y < Min.Y;
-                var crossMinZPlane = other.Min.Z < Min.Z;
-                yield return this;
-                if (crossMaxXPlane)
-                {
-                    yield return new AABB { Max = other.Max, Min = new Point3 { X = Max.X, Y = other.Min.Y, Z = other.Min.Z } };
-                }
-                if (crossMinXPlane)
-                {
-                    yield return new AABB { Min = other.Min, Max = new Point3 { X = Min.X, Y = other.Max.Y, Z = other.Max.Z } };
-                }
-                if (crossMaxYPlane)
-                {
-                    yield return new AABB
-                    {
-                        Max = new Point3 { X = Math.Min(other.Max.X, Max.X), Y = other.Max.Y, Z = other.Max.Z },
-                        Min = new Point3 { X = Math.Max(other.Min.X, Min.X), Y = Max.Y, Z = other.Min.Z }
-                    };
-                }
-                if (crossMinYPlane)
-                {
-                    yield return new AABB
-                    {
-                        Min = new Point3 { X = Math.Max(other.Min.X, Min.X), Y = other.Min.Y, Z = other.Min.Z },
-                        Max = new Point3 { X = Math.Min(other.Max.X, Max.X), Y = Min.Y, Z = other.Max.Z }
-                    };
-                }
-                if (crossMaxZPlane)
-                {
-                    yield return new AABB
-                    {
-                        Max = new Point3 { X = Math.Min(other.Max.X, Max.X), Y = Math.Min(other.Max.Y, Max.Y), Z = other.Max.Z },
-                        Min = new Point3 { X = Math.Max(other.Min.X, Min.X), Y = Math.Max(other.Min.Y, Min.Y), Z = Max.Z }
-                    };
-                }
-                if (crossMinZPlane)
-                {
-                    yield return new AABB
-                    {
-                        Min = new Point3 { X = Math.Max(other.Min.X, Min.X), Y = Math.Max(other.Min.Y, Min.Y), Z = other.Min.Z },
-                        Max = new Point3 { X = Math.Min(other.Max.X, Max.X), Y = Math.Min(other.Max.Y, Max.Y), Z = Min.Z }
-                    };
-                }
-            }
+            return Remove(other).Append(other);
         }
 
         public IEnumerable<AABB> Remove(AABB other)
@@ -153,7 +90,7 @@ namespace Common.CubeAlgebra
                 };
                 yield return new AABB
                 {
-                    Min = new Point3 { X = other.Min.X, Y = other.Min.Y, Z = Min.Z+1 },
+                    Min = new Point3 { X = other.Min.X, Y = other.Min.Y, Z = Min.Z },
                     Max = new Point3 { X = other.Max.X, Y = other.Max.Y, Z = other.Min.Z-1 }
                 };
             }
