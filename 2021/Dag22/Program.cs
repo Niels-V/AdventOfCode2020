@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Common.CubeAlgebra;
 
 namespace AoC
 {
@@ -53,10 +54,32 @@ namespace AoC
         static long Second(string inputFile)
         {
             var rebootsteps = new Parser().ReadData(inputFile).ToList();
-            var xborders = rebootsteps.SelectMany(r => r.X).OrderBy(i => i).Distinct().SelectMany(i => System.Linq.Enumerable.Range(i - 1, 3)).Distinct().OrderBy(i => i).ToList();
-            var yborders = rebootsteps.SelectMany(r => r.Y).OrderBy(i => i).Distinct().SelectMany(i => System.Linq.Enumerable.Range(i - 1, 3)).Distinct().OrderBy(i => i).ToList();
-            var zborders = rebootsteps.SelectMany(r => r.Z).OrderBy(i => i).Distinct().SelectMany(i => System.Linq.Enumerable.Range(i - 1, 3)).Distinct().OrderBy(i => i).ToList();
-            var sum = CountSegments(xborders, yborders, zborders, rebootsteps);
+
+            var representation = rebootsteps.Select(r => (instruction:r, cube: new AABB(r.Xmin, r.Ymin, r.Zmin, r.Xmax, r.Ymax, r.Zmax))).ToList();
+            var cubes = new List<AABB>
+            {
+                representation[0].cube
+            };
+            for (int i = 1; i < representation.Count; i++)
+            {
+                var newCubes = new List<AABB>();
+                var newCube = representation[i].cube;
+                
+                var notIntersects = cubes.Where(c => !c.IntersectWith(newCube));
+                newCubes.AddRange(notIntersects);
+                cubes.RemoveAll(c => !c.IntersectWith(newCube));
+                //remove all contained in newCube
+                cubes.RemoveAll(c => newCube.Contains(c));
+                newCubes.AddRange(cubes.SelectMany(c => c.Remove(newCube)));
+                cubes = newCubes;
+
+                if (representation[i].instruction.InstructionOn)
+                {
+                    cubes.Add(newCube);
+                }
+            }
+
+            var sum = cubes.Sum(c=>c.Volume);
 
             return sum;
         }
@@ -111,7 +134,17 @@ namespace AoC
             Console.WriteLine(sw.Elapsed.ToString());
             return sum;
         }
-
+        [TestMethod]
+        public void TestCubeRemove()
+        {
+            //on x = 10..12, y = 10..12, z = 10..12
+            //on x = 11..13, y = 11..13, z = 11..13
+            var c1 = new AABB(10, 10, 10, 12, 12, 12);
+            var c2 = new AABB(11, 11, 11, 13, 13, 13);
+            var c3 = c1.Remove(c2);
+            Assert.AreEqual(19, c3.Sum(c => c.Volume));
+            Assert.AreEqual(3, c3.Count());
+        }
 
 
         [TestMethod]
