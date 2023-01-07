@@ -25,6 +25,10 @@ namespace Common
     {
         protected override int ParseLine(string line) => Convert.ToInt32(line);
     }
+    public class NullIntParser : Parser<int?>
+    {
+        protected override int? ParseLine(string line) => string.IsNullOrWhiteSpace(line) ? new int?() : new int?(Convert.ToInt32(line));
+    }
     public class LongParser : Parser<long>
     {
         protected override long ParseLine(string line) => Convert.ToInt64(line);
@@ -34,4 +38,5 @@ namespace Common
     {
         protected override string ParseLine(string line) => line;
     }
+    
 }
