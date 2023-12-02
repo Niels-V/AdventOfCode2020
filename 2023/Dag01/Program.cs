@@ -51,9 +51,9 @@ namespace AoC
             static readonly Regex calibrationRule = new("(\\d)", RegexOptions.Compiled);
    
         protected override int ParseLine(string line) {
-            var regexResult = calibrationRule.Match(line);
-            var firstInt = Convert.ToInt32(regexResult.Groups.Values.First().Value);
-            var lastInt =  Convert.ToInt32(regexResult.Groups.Values.Last().Value);
+            var regexResult = calibrationRule.Matches(line);
+            var firstInt = Convert.ToInt32(regexResult.First().Value);
+            var lastInt =  Convert.ToInt32(regexResult.Last().Value);
             
             return firstInt*10+lastInt;
         }
