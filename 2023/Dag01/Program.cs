@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AoC
 {
@@ -22,7 +23,9 @@ namespace AoC
 
         static long First(string inputFile)
         {
-            return -1;
+            var parser = new CalibrationParser();
+            var steps = parser.ReadData(inputFile);
+            return steps.Sum();
         }
 
         static long Second(string inputFile)
@@ -34,7 +37,7 @@ namespace AoC
         public void TestPart1()
         {
             var result = First("test.txt");
-            Assert.AreEqual(-1, result);
+            Assert.AreEqual(142, result);
         }
 
         [TestMethod]
@@ -42,6 +45,17 @@ namespace AoC
         {
             var result = Second("test.txt");
             Assert.AreEqual(-1, result);
+        }
+
+        public class CalibrationParser : Common.Parser<int> {
+            static readonly Regex calibrationRule = new("(\\d)", RegexOptions.Compiled);
+   
+        protected override int ParseLine(string line) {
+            var regexResult = calibrationRule.Match(line);
+            var firstInt = Convert.ToInt32(regexResult.Groups.Values.First().Value);
+            var lastInt =  Convert.ToInt32(regexResult.Groups.Values.Last().Value);
+            
+            return firstInt*10+lastInt;
         }
     }
 }
