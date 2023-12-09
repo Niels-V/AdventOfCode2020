@@ -46,7 +46,7 @@ namespace AoC
             var n = serie.Length;
             //Xi = i
             //Yi = serie[i]
-            // xp is the x-value we want to calculate yp for, ie n+1
+            // xp is the x-value we want to calculate yp for, ie 0
             var xp = 0;
             return Extrapolate(serie, n, xp);
         }
