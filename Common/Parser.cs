@@ -20,6 +20,15 @@ namespace Common
         public override IEnumerable<int> ReadData(string filePath) => Readlines(filePath).First().Split(',', StringSplitOptions.RemoveEmptyEntries).Select(ParseLine);
         protected override int ParseLine(string line) => Convert.ToInt32(line);
     }
+    public class IntSeriesParser : Parser<IEnumerable<int>>
+    {
+        private char _numberSeperator;
+        public IntSeriesParser(char numberSeparator)
+        {
+            _numberSeperator = numberSeparator;
+        }
+        protected override IEnumerable<int> ParseLine(string line) => line.Split(_numberSeperator, StringSplitOptions.RemoveEmptyEntries).Select(number=> Convert.ToInt32(number));
+    }
 
     public class IntParser : Parser<int>
     {

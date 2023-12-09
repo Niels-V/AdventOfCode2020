@@ -1,7 +1,6 @@
 ﻿using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -63,31 +62,10 @@ namespace AoC
             //brute force doesn't work. But they hit always the same node. So:
             //0:19631 1:17287 2:12599 3:23147 4:13771 5:20803 node 0 is always hit by a multiply of 19631 steps, node 1 by 17287
             //so we need the Least Common Multiple of those six numbers:
-
-            return Lcm(firstPositions);
+            
+            return ExtendedMath.LeastCommonMultiple(firstPositions);
         }
-        /// <summary>
-        /// Greatest Common Divisor
-        /// </summary>
-        /// <param name="n1"></param>
-        /// <param name="n2"></param>
-        /// <returns></returns>
-        static long Gcd(long n1, long n2)
-        {
-            if (n2 == 0)
-            {
-                return n1;
-            }
-            else
-            {
-                return Gcd(n2, n1 % n2);
-            }
-        }
-
-        public static long Lcm(long[] numbers)
-        {
-            return numbers.Aggregate((S, val) => S * val / Gcd(S, val));
-        }
+        
 
         [TestMethod]
         public void TestPart1a()
