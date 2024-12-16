@@ -50,5 +50,13 @@ namespace Common
             }
             yield break;
         }
+        public static IEnumerable<int> Differences(this IEnumerable<int> enumerable)
+        {
+            for (int i = 0; i < enumerable.Count() - 1; i++)
+            {
+                yield return enumerable.ElementAt(i + 1) - enumerable.ElementAt(i);
+            }
+            yield break;
+        }
     }
 }
