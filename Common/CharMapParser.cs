@@ -24,10 +24,14 @@ namespace Common
             {
                 for (int j = 0; j < m; j++)
                 {
-                    result[i, j] = Convert(lines[i][j]);
+                    result[i, j] = Convert(lines[i][j], i, j);
                 }
             }
             return result;
+        }
+        protected virtual T Convert(char input, int i, int j)
+        {
+            return Convert(input);
         }
         protected abstract T Convert(char input);
     }
